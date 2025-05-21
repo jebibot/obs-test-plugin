@@ -17,6 +17,7 @@ with this program. If not, see <https://www.gnu.org/licenses/>
 */
 
 #include <QMainWindow>
+#include <QMetaObject>
 #include <obs-module.h>
 #include <obs-frontend-api.h>
 #include <plugin-support.h>
@@ -28,8 +29,9 @@ bool obs_module_load(void)
 {
 	obs_log(LOG_INFO, "plugin loaded successfully (version %s)", PLUGIN_VERSION);
 	QMainWindow *mainWindow = static_cast<QMainWindow *>(obs_frontend_get_main_window());
-	for(int i = mainWindow->methodOffset(); i < mainWindow->methodCount(); ++i)
-		obs_log(LOG_INFO, "- %s", mainWindow->method(i).methodSignature().constData());
+	QMetaObject* metaObject = mainWindow->metaObject();
+	for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+		obs_log(LOG_INFO, "- %s", metaObject->method(i).methodSignature().constData());
 	return true;
 }
 
